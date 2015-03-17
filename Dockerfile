@@ -1,10 +1,10 @@
 FROM tutum/lamp:latest
-RUN apt-get update && apt-get dist-upgrade -qq -y
-RUN apt-get install -qq -y php5-curl php5-ldap php5-gd php5-mcrypt
-RUN apt-get -yy install vim
+RUN apt-get update && apt-get dist-upgrade -qq -y && \
+    apt-get install -qq -y php5-curl php5-ldap php5-gd php5-mcrypt 
 
-RUN a2enmod headers && a2enmod expires
-RUN php5enmod mcrypt
+RUN a2enmod headers && \
+    a2enmod expires && \
+    php5enmod mcrypt
 
 RUN rm -fr /app
 COPY processmaker /app
