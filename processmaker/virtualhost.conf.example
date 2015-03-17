@@ -1,21 +1,44 @@
 <VirtualHost *:80>
-    ServerName 127.0.0.1
+    ServerAdmin webmaster@localhost
 
-    DocumentRoot /example/path/to/processmaker/workflow/public_html
-    DirectoryIndex index.html index.php
-
-    <Directory /example/path/to/processmaker/workflow/public_html>
-        Options Indexes FollowSymLinks MultiViews
-        AllowOverride None
-        Order allow,deny
-        allow from all
-
-        ExpiresActive On
-
-        <IfModule mod_rewrite.c>
-            RewriteEngine On
-            RewriteCond %{REQUEST_FILENAME} !-f
-            RewriteRule ^.*/(.*)$ app.php [QSA,L,NC]
-        </IfModule>
+    DocumentRoot /var/www/html/workflow/public_html
+    <Directory />
+            Options FollowSymLinks
+            AllowOverride None
     </Directory>
+    <Directory /var/www/html/workflow/public_html>
+            Options Indexes FollowSymLinks MultiViews
+            # To make wordpress .htaccess work
+            AllowOverride FileInfo
+            Order allow,deny
+            allow from all
+
+            <IfModule mod_rewrite.c>
+                RewriteEngine On
+                RewriteCond %{REQUEST_FILENAME} !-f
+                RewriteRule ^.*/(.*)$ app.php [QSA,L,NC]
+             </IfModule>
+    </Directory>
+
+    ScriptAlias /cgi-bin/ /usr/lib/cgi-bin/
+    <Directory "/usr/lib/cgi-bin">
+            AllowOverride None
+            Options +ExecCGI -MultiViews +SymLinksIfOwnerMatch
+            Order allow,deny
+            Allow from all
+    </Directory>
+
+    ErrorLog ${APACHE_LOG_DIR}/error.log
+
+    # Possible values include: debug, info, notice, warn, error, crit,
+    # alert, emerg.
+    LogLevel warn
+
+    CustomLog ${APACHE_LOG_DIR}/access.log combined
+
+    #
+    # Set HTTPS environment variable if we came in over secure
+    #  channel.
+    SetEnvIf x-forwarded-proto https HTTPS=on
+
 </VirtualHost>
